@@ -1,12 +1,17 @@
 const apiURL = "https://musicbrainz.org/ws/2/";
 
+export type Artist = {
+  id: string;
+  name: string;
+};
+
 export async function getArtist(query: string) {
-  const response = await fetch("${apiURL/artist?query=query&limit=5}");
+  const response = await fetch(`${apiURL}artist?query=${encodeURIComponent(query)}&limit=5&fmt=json`);
 
   if (!response.ok) {
     throw new Error("api call failed");
   }
 
   const data = await response.json();
-  return data.results;
+  return data.artists as Artist[];
 }
