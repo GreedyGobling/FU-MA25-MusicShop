@@ -12,6 +12,7 @@ function HomePage() {
   const [currentAPIState, setAPIState] = useState(APISTATE.NOTHING);
   const [query, setQuery] = useState("");
   const [artists, setArtists] = useState<Artist[]>([]);
+  const [errorMessage, setErrorMessage] = useState("");
 
 
   async function search(e: FormEvent) {
@@ -22,14 +23,15 @@ function HomePage() {
       const result = await getArtist(query);
       setArtists(result);
       setAPIState(APISTATE.DONE);
-    } catch {
+    } catch (error){
       setArtists([]);
+      setErrorMessage(error instanceof Error ? error.message : "Unknown error");
       setAPIState(APISTATE.FAIL);
     }
   }
 
   if (currentAPIState === APISTATE.LOADING) return <p>Loading...</p>;
-  if (currentAPIState === APISTATE.FAIL) return <p></p>;
+  if (currentAPIState === APISTATE.FAIL) return <p>{errorMessage}</p>;
 
   return (
     <div>

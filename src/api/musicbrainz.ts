@@ -11,7 +11,7 @@ export async function getArtist(query: string) {
   );
 
   if (!response.ok) {
-    throw new Error("api call failed");
+    throw new Error(`API call failed (${response.status} ${response.statusText})`);
   }
 
   const data = await response.json();
