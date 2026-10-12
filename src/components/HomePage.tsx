@@ -1,25 +1,35 @@
 import { useState, type FormEvent } from "react";
 import { getArtist, type Artist } from "../api/musicbrainz.ts";
 
+const APISTATE ={
+  NOTHING: "Nothing",
+  LOADING: "Loading",
+  DONE: "Done",
+  FAIL: "Fail",
+}
+
 function HomePage() {
+  const [currentAPIState, setAPIState] = useState(APISTATE.NOTHING);
   const [query, setQuery] = useState("");
   const [artists, setArtists] = useState<Artist[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+
 
   async function search(e: FormEvent) {
     e.preventDefault();
-    setIsLoading(true);
-    
+    setAPIState(APISTATE.LOADING);
+
     try {
-      setArtists(await getArtist(query));
+      const result = await getArtist(query);
+      setArtists(result);
+      setAPIState(APISTATE.DONE);
     } catch {
       setArtists([]);
-    } finally{
-      setIsLoading(false);
+      setAPIState(APISTATE.FAIL);
     }
   }
 
-  if (isLoading) return <p>Loading...</p>;
+  if (currentAPIState === APISTATE.LOADING) return <p>Loading...</p>;
+  if (currentAPIState === APISTATE.FAIL) return <p></p>;
 
   return (
     <div>
