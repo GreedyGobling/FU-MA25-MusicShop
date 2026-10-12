@@ -6,7 +6,9 @@ export type Artist = {
 };
 
 export async function getArtist(query: string) {
-  const response = await fetch(`${apiURL}artist?query=${encodeURIComponent(query)}&limit=5&fmt=json`);
+  const response = await fetch(
+    `${apiURL}artist?query=${encodeURIComponent(query)}&limit=5&fmt=json`,
+  );
 
   if (!response.ok) {
     throw new Error("api call failed");

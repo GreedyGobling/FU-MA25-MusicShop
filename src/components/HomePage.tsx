@@ -4,15 +4,22 @@ import { getArtist, type Artist } from "../api/musicbrainz.ts";
 function HomePage() {
   const [query, setQuery] = useState("");
   const [artists, setArtists] = useState<Artist[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function search(e: FormEvent) {
     e.preventDefault();
+    setIsLoading(true);
+    
     try {
       setArtists(await getArtist(query));
     } catch {
       setArtists([]);
+    } finally{
+      setIsLoading(false);
     }
   }
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <div>
