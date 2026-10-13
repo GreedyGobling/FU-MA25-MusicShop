@@ -47,6 +47,7 @@ function ArtistPage() {
         <img src={cover.strArtistThumb} alt={cover.strArtist} width={300} />
       )}
       <h1>{cover?.strArtist ?? id}</h1>
+      <h2>{cover?.strBiography ?? null}</h2>
     </div>
   );
 }

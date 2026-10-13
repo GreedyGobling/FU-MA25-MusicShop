@@ -6,6 +6,7 @@ export type ArtistCover = {
   strArtistThumb: string | null;
   strArtistFanart: string | null;
   strArtistLogo: string | null;
+  strBiography: string | null;
 };
 
 export async function getArtistCover(id: string): Promise<ArtistCover | null> {
