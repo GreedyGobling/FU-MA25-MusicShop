@@ -38,6 +38,8 @@ const store = configureStore({
   },
 });
 
+export type RootState = ReturnType<typeof store.getState>;
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>

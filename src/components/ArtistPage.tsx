@@ -3,6 +3,8 @@ import { Link, useParams } from "react-router";
 import { getArtistCover, type ArtistCover } from "../api/theaudiodb.ts";
 import { getAlbums, type Album } from "../api/musicbrainz.ts";
 import { albumCoverUrl } from "../api/coverart.ts";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../features/cartSlice.ts";
 
 const APISTATE = {
   NOTHING: "Nothing",
@@ -13,6 +15,7 @@ const APISTATE = {
 
 function ArtistPage() {
   const { id } = useParams();
+  const dispatch = useDispatch();
   const [currentAPIState, setAPIState] = useState(APISTATE.LOADING);
   const [cover, setCover] = useState<ArtistCover | null>(null);
   const [albums, setAlbums] = useState<Album[]>([]);
@@ -65,6 +68,7 @@ function ArtistPage() {
       <h1>{cover?.strArtist ?? id}</h1>
       <h2>{cover?.strBiography ?? null}</h2>
       <h2>Albums</h2>
+      <p>Demo price: 99 kr per album.</p>
       {albumError ? (
         <p>Could not load albums: {albumError}</p>
       ) : (
@@ -78,6 +82,18 @@ function ArtistPage() {
               />
               <span>{album.title}</span>
               {album.firstReleaseDate && <span> ({album.firstReleaseDate})</span>}
+              <button
+                type="button"
+                aria-label={`Buy ${album.title}`}
+                onClick={() => dispatch(addToCart({
+                  id: album.id,
+                  name: album.title,
+                  price: 99,
+                  quantity: 1,
+                }))}
+              >
+                Buy album
+              </button>
             </li>
           ))}
         </ul>
