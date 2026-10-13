@@ -1,5 +1,10 @@
 import { useState, type FormEvent } from "react";
 import { getArtist, type Artist } from "../api/musicbrainz.ts";
+import { getArtistCover } from "../api/theaudiodb.ts";
+
+type SearchResult = Artist & {
+  cover: string | null;
+};
 
 const APISTATE ={
   NOTHING: "Nothing",
@@ -11,7 +16,7 @@ const APISTATE ={
 function HomePage() {
   const [currentAPIState, setAPIState] = useState(APISTATE.NOTHING);
   const [query, setQuery] = useState("");
-  const [artists, setArtists] = useState<Artist[]>([]);
+  const [artists, setArtists] = useState<SearchResult[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
 
 
@@ -21,7 +26,19 @@ function HomePage() {
 
     try {
       const result = await getArtist(query);
-      setArtists(result);
+
+      const withCovers = await Promise.all(
+        result.map(async (artist) => {
+          try {
+            const cover = await getArtistCover(artist.id);
+            return { ...artist, cover: cover?.strArtistThumb ?? null };
+          } catch {
+            return { ...artist, cover: null };
+          }
+        }),
+      );
+
+      setArtists(withCovers);
       setAPIState(APISTATE.DONE);
     } catch (error){
       setArtists([]);
@@ -40,7 +57,14 @@ function HomePage() {
       </form>
       <ul>
         {artists.map((artist) => (
-          <li key={artist.id}>{artist.name}</li>
+          <li key={artist.id}>
+            {artist.cover ? (
+              <img src={artist.cover} alt={artist.name} width={100} />
+            ) : (
+              <span>No cover </span>
+            )}
+            <span>{artist.name}</span>
+          </li>
         ))}
       </ul>
     </div>
