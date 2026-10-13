@@ -17,6 +17,7 @@ function ArtistPage() {
   const [cover, setCover] = useState<ArtistCover | null>(null);
   const [albums, setAlbums] = useState<Album[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [albumError, setAlbumError] = useState("");
   const [loadedID, setLoadedID] = useState(id);
 
   if (id !== loadedID) {
@@ -25,6 +26,7 @@ function ArtistPage() {
     setCover(null);
     setAlbums([]);
     setErrorMessage("");
+    setAlbumError("");
   }
 
   useEffect(() => {
@@ -41,8 +43,14 @@ function ArtistPage() {
       });
 
     getAlbums(id)
-      .then(setAlbums)
-      .catch(() => setAlbums([]));
+      .then((result) => {
+        setAlbums(result);
+        setAlbumError("");
+      })
+      .catch((error) => {
+        setAlbums([]);
+        setAlbumError(error instanceof Error ? error.message : "Unknown error");
+      });
   }, [id]);
 
   if (currentAPIState === APISTATE.LOADING) return <p>Loading...</p>;
@@ -57,19 +65,23 @@ function ArtistPage() {
       <h1>{cover?.strArtist ?? id}</h1>
       <h2>{cover?.strBiography ?? null}</h2>
       <h2>Albums</h2>
-      <ul>
-        {albums.map((album) => (
-          <li key={album.id}>
-            <img
-              src={albumCoverUrl(album.id)}
-              alt={album.title}
-              width={100}
-            />
-            <span>{album.title}</span>
-            {album.firstReleaseDate && <span> ({album.firstReleaseDate})</span>}
-          </li>
-        ))}
-      </ul>
+      {albumError ? (
+        <p>Could not load albums: {albumError}</p>
+      ) : (
+        <ul>
+          {albums.map((album) => (
+            <li key={album.id}>
+              <img
+                src={albumCoverUrl(album.id)}
+                alt={album.title}
+                width={100}
+              />
+              <span>{album.title}</span>
+              {album.firstReleaseDate && <span> ({album.firstReleaseDate})</span>}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
