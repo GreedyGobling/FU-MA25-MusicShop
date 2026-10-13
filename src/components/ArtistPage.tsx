@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import { getArtistCover, type ArtistCover } from "../api/theaudiodb.ts";
+import { getAlbums, type Album } from "../api/musicbrainz.ts";
+import { albumCoverUrl } from "../api/coverart.ts";
 
 const APISTATE = {
   NOTHING: "Nothing",
@@ -13,6 +15,7 @@ function ArtistPage() {
   const { id } = useParams();
   const [currentAPIState, setAPIState] = useState(APISTATE.LOADING);
   const [cover, setCover] = useState<ArtistCover | null>(null);
+  const [albums, setAlbums] = useState<Album[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [loadedID, setLoadedID] = useState(id);
 
@@ -20,6 +23,7 @@ function ArtistPage() {
     setLoadedID(id);
     setAPIState(APISTATE.LOADING);
     setCover(null);
+    setAlbums([]);
     setErrorMessage("");
   }
 
@@ -35,6 +39,10 @@ function ArtistPage() {
         setErrorMessage(error instanceof Error ? error.message : "Unknown error");
         setAPIState(APISTATE.FAIL);
       });
+
+    getAlbums(id)
+      .then(setAlbums)
+      .catch(() => setAlbums([]));
   }, [id]);
 
   if (currentAPIState === APISTATE.LOADING) return <p>Loading...</p>;
@@ -48,6 +56,20 @@ function ArtistPage() {
       )}
       <h1>{cover?.strArtist ?? id}</h1>
       <h2>{cover?.strBiography ?? null}</h2>
+      <h2>Albums</h2>
+      <ul>
+        {albums.map((album) => (
+          <li key={album.id}>
+            <img
+              src={albumCoverUrl(album.id)}
+              alt={album.title}
+              width={100}
+            />
+            <span>{album.title}</span>
+            {album.firstReleaseDate && <span> ({album.firstReleaseDate})</span>}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
