@@ -1,6 +1,10 @@
 import { useState, type FormEvent } from "react";
+import { Link } from "react-router";
 import { getArtist, type Artist } from "../api/musicbrainz.ts";
 import { getArtistCover } from "../api/theaudiodb.ts";
+
+
+// rename file ?
 
 type SearchResult = Artist & {
   cover: string | null;
@@ -58,12 +62,14 @@ function HomePage() {
       <ul>
         {artists.map((artist) => (
           <li key={artist.id}>
-            {artist.cover ? (
-              <img src={artist.cover} alt={artist.name} width={100} />
-            ) : (
-              <span>No Cover: </span>
-            )}
-            <span>{artist.name}</span>
+            <Link to={`/artist/${artist.id}`}>
+              {artist.cover ? (
+                <img src={artist.cover} alt={artist.name} width={100} />
+              ) : (
+                <span>No Cover: </span>
+              )}
+              <span>{artist.name}</span>
+            </Link>
           </li>
         ))}
       </ul>
