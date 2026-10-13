@@ -61,7 +61,7 @@ function HomePage() {
             {artist.cover ? (
               <img src={artist.cover} alt={artist.name} width={100} />
             ) : (
-              <span>No cover </span>
+              <span>No Cover: </span>
             )}
             <span>{artist.name}</span>
           </li>
