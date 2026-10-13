@@ -8,6 +8,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import cartSlice from "./features/cartSlice.ts";
 import HomePage from "./components/HomePage.tsx";
 import ArtistPage from "./components/ArtistPage.tsx";
+import Kassa from "./components/Kassa.tsx";
 
 const router = createHashRouter([
   {
@@ -22,10 +23,15 @@ const router = createHashRouter([
         path: "artist/:id",
         Component: ArtistPage,
       },
+      {
+        path: "kassa",
+        Component: Kassa,
+
+      },
     ],
   },
 ]);
-// kassa, kategori, itempage, homepage
+
 const store = configureStore({
   reducer: {
     cart: cartSlice,
