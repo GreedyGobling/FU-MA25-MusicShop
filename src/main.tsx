@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import cartSlice from "./features/cartSlice.ts";
 import HomePage from "./components/HomePage.tsx";
+import ArtistPage from "./components/ArtistPage.tsx";
 
 const router = createHashRouter([
   {
@@ -16,6 +17,10 @@ const router = createHashRouter([
       {
         index: true,
         Component: HomePage,
+      },
+      {
+        path: "artist/:id",
+        Component: ArtistPage,
       },
     ],
   },
