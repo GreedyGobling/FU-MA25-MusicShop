@@ -3,8 +3,9 @@ import { Link, useParams } from "react-router";
 import { getArtistCover, type ArtistCover } from "../api/theaudiodb.ts";
 import { getAlbums, type Album } from "../api/musicbrainz.ts";
 import { albumCoverUrl } from "../api/coverart.ts";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../features/cartSlice.ts";
+import type { RootState } from "../main.tsx";
 import "./ArtistPage.css";
 
 const APISTATE = {
@@ -17,6 +18,7 @@ const APISTATE = {
 function ArtistPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const items = useSelector((state: RootState) => state.cart.items);
   const [currentAPIState, setAPIState] = useState(APISTATE.LOADING);
   const [cover, setCover] = useState<ArtistCover | null>(null);
   const [albums, setAlbums] = useState<Album[]>([]);
@@ -77,7 +79,7 @@ function ArtistPage() {
       {albumError ? (
         <p>Could not load albums: {albumError}</p>
       ) : (
-        <ul>
+        <ul className="album-grid">
           {albums.map((album) => (
             <li key={album.id}>
               <img
@@ -90,6 +92,7 @@ function ArtistPage() {
               <button
                 type="button"
                 aria-label={`Buy ${album.title}`}
+                disabled={items.some((item) => item.id === album.id)}
                 onClick={() => dispatch(addToCart({
                   id: album.id,
                   name: album.title,
