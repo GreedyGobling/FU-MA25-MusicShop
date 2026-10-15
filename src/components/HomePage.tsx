@@ -51,14 +51,21 @@ function HomePage() {
     }
   }
 
-  if (currentAPIState === APISTATE.LOADING) return <p>Loading...</p>;
-  if (currentAPIState === APISTATE.FAIL) return <p>{errorMessage}</p>;
-
   return (
     <div>
       <form onSubmit={search}>
-        <input value={query} onChange={(e) => setQuery(e.target.value)} />
+        <input
+          aria-label="Search artists"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          disabled={currentAPIState === APISTATE.LOADING}
+        />
+        <button type="submit" disabled={currentAPIState === APISTATE.LOADING}>
+          {currentAPIState === APISTATE.FAIL ? "Retry" : "Search"}
+        </button>
       </form>
+      {currentAPIState === APISTATE.LOADING && <p role="status">Loading...</p>}
+      {currentAPIState === APISTATE.FAIL && <p role="alert">{errorMessage}</p>}
       <ul>
         {artists.map((artist) => (
           <li key={artist.id}>
