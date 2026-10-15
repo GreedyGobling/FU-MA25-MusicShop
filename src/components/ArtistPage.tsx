@@ -96,6 +96,7 @@ function ArtistPage() {
                 onClick={() => dispatch(addToCart({
                   id: album.id,
                   name: album.title,
+                  artistName: cover?.strArtist ?? "Unknown artist",
                   price: 99,
                   quantity: 1,
                 }))}

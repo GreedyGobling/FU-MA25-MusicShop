@@ -2,6 +2,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 import { removeItem, clearCart } from "../features/cartSlice.ts";
 import type { RootState } from "../main.tsx";
+import { albumCoverUrl } from "../api/coverart.ts";
+import "./Kassa.css";
 
 function Kassa() {
   const dispatch = useDispatch();
@@ -16,10 +18,12 @@ function Kassa() {
         <p>Your cart is empty.</p>
       ) : (
         <>
-          <ul>
+          <ul className="cart-items">
             {items.map((item) => (
               <li key={item.id}>
-                {item.name} — {item.quantity} × {item.price} kr = {item.quantity * item.price} kr
+                <img src={albumCoverUrl(item.id)} alt={item.name} width={100} height={100} />
+                <span className="cart-item-title">{item.artistName}: {item.name}</span>
+                <span>{item.quantity} × {item.price} kr = {item.quantity * item.price} kr</span>
                 <button
                   type="button"
                   aria-label={`Remove ${item.name}`}

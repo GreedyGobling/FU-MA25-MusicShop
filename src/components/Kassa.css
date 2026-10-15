@@ -1,0 +1,26 @@
+.cart-items {
+  margin: 24px 0;
+  padding: 0 24px;
+  list-style: none;
+  text-align: left;
+}
+
+.cart-items > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.cart-items img {
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.cart-item-title {
+  flex: 1 1 200px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
