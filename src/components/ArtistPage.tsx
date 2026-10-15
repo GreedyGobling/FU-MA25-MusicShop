@@ -5,6 +5,7 @@ import { getAlbums, type Album } from "../api/musicbrainz.ts";
 import { albumCoverUrl } from "../api/coverart.ts";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../features/cartSlice.ts";
+import "./ArtistPage.css";
 
 const APISTATE = {
   NOTHING: "Nothing",
@@ -62,11 +63,15 @@ function ArtistPage() {
   return (
     <div>
       <Link to="/">Back</Link>
-      {cover?.strArtistThumb && (
-        <img src={cover.strArtistThumb} alt={cover.strArtist} width={300} />
-      )}
-      <h1>{cover?.strArtist ?? id}</h1>
-      <h2>{cover?.strBiography ?? null}</h2>
+      <div className="artist-profile">
+        {cover?.strArtistThumb && (
+          <img src={cover.strArtistThumb} alt={cover.strArtist} width={300} />
+        )}
+        <div className="artist-bio">
+          <h1>{cover?.strArtist ?? id}</h1>
+          <p>{cover?.strBiography ?? null}</p>
+        </div>
+      </div>
       <h2>Albums</h2>
       <p>Demo price: 99 kr per album.</p>
       {albumError ? (
