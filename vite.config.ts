@@ -4,6 +4,7 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/FU-MA25-MusicShop/',
   plugins: [
     react(),
     babel({ presets: [reactCompilerPreset()] })
